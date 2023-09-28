@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- CSS  -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <!-- JavaScript -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+    <div class="wrapper">
+    <div class="sidebar">
+      <div class="logocontainer">
+        <a class="navbar-brand" href="#"><img src="images/logo.svg" alt="ロゴ" width="180px"></a>
+      </div>
+      <ul>
+        <li class="menucontent activemenu">
+          <img src="images/generateicon.svg" alt="商品説明文を作る" width="88px"> <img src="images/done.svg" alt="商品説明文を作る"
+            width="30px" class="doneicon"> 商品説明文を作る
+        </li>
+        <li class="menucontent"> <img src="images/priceicon.svg" alt="商品説明文を作る" width="88px"> <img
+            src="images/done.svg" alt="商品説明文を作る" width="30px" class="doneicon"> 販売価格を考える</li>
+        <li class="menucontent"> <img src="images/priceicon.svg" alt="商品説明文を作る" width="88px"> <img
+            src="images/done.svg" alt="商品説明文を作る" width="30px" class="doneicon"> 代わりに出品する</li>
+      </ul>
+    </div>
+    <div class="content">
+      <div class="container">
+        <div class="titlecontainer">
+          商品説明を作る
+        </div>
+        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+          <label class="btn btn-secondary active">
+              <input type="radio" name="options" id="mercari" checked> メルカリ
+          </label>
+          <label class="btn btn-secondary">
+              <input type="radio" name="options" id="yahoo"> ヤフオク
+          </label>
+          <label class="btn btn-secondary">
+              <input type="radio" name="options" id="jimoti"> ジモティ
+          </label>
+      </div>
+      
+      <script>
+          $(function () {
+              $("input[name='options']").change(function () {
+                  let marketplace = $(this).attr("id"); // mercari, yahoo, or jimoti
+                  let descriptionKey = 'description' + marketplace.charAt(0).toUpperCase() + marketplace.slice(1); // descriptionMercari, descriptionYahoo, or descriptionJimoti
+                  let description = localStorage.getItem(descriptionKey) || 'ここに' + marketplace + '向けの商品説明文が表示されます。';
+                  $('#productDescription').val(description);
+              });
+          });
+      
+          document.addEventListener('DOMContentLoaded', function () {
+              let descriptionInput = document.getElementById('productDescription');
+              let defaultDescription = localStorage.getItem('descriptionMercari') || 'ここにメルカリ向けの商品説明文が表示されます。';
+              descriptionInput.value = defaultDescription;
+          });
+      </script>
+      
+  </div>
+</body>
+
+</html>

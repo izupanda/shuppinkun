@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- CSS  -->
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+
+  <!-- JavaScript -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <link rel=”icon” href=“images/favicon.ico”>
+
+
+
+  <title>出品手伝いくん</title>
+</head>
+
+<body>
+  <nav class="navbar navbar-light bg-light">
+    <a class="navbar-brand" href="#">
+      <img src="images/logo.svg" class="d-inline-block align-top" alt="logo" class="logoimg">
+    </a>
+  </nav>
+
+  <div class="container mt-4">
+    <form>
+      <div class="form-group">
+        <label for="productName">商品の名前</label>
+        <input type="text" class="form-control" id="productName" placeholder="商品の名前を入力してください">
+      </div>
+
+      <div id="cautions">
+        <div class="form-group">
+          <label for="caution1">商品の注意事項</label>
+          <input type="text" class="form-control caution" id="caution1" placeholder="注意事項を入力してください">
+          <input type="text" class="form-control caution" id="caution2" placeholder="注意事項を入力してください">
+          <input type="text" class="form-control caution" id="caution3" placeholder="注意事項を入力してください">
+          <input type="text" class="form-control caution" id="caution4" placeholder="注意事項を入力してください">
+          <input type="text" class="form-control caution" id="caution5" placeholder="注意事項を入力してください">
+        </div>
+      </div>
+
+      <!-- 他の注意事項の入力フォームはここに追加されます -->
+
+      <button type="button" id="addCaution" class="btn btn-secondary mb-3">＋</button>
+
+      <button type="button" id="nextButton">次へ進む</button>
+    </form>
+  </div>
+
+  <script>
+    $(document).ready(function () {
+      var counter = 6;
+
+      $('#addCaution').click(function () {
+        var newCaution = `
+              <div class="form-group">
+                  <input type="text" class="form-control caution" id="caution${counter}" placeholder="注意事項を入力してください">
+              </div>`;
+        $('#cautions').append(newCaution);
+        counter++;
+      });
+
+      $('#nextButton').click(function () {
+        var productName = $('#productName').val();
+        var cautions = $('.caution').map(function () { return $(this).val(); }).get();
+        var descriptionMercari = `{"number": 1, "invalid_reason": "Malformed citation 【メルカリ用】", "description": "商品名: ${productName}\n注意事項: ${cautions.join(', ')}"}`;
+        var descriptionYahoo = `{"number": 1, "invalid_reason": "Malformed citation 【ヤフオク用】", "description": "商品名: ${productName}\n注意事項: ${cautions.join(', ')}"}`;
+        var descriptionJimoti = `{"number": 1, "invalid_reason": "Malformed citation 【ジモティ用】", "description": "商品名: ${productName}\n注意事項: ${cautions.join(', ')}"}`;
+
+        localStorage.setItem('descriptionMercari', descriptionMercari);
+        localStorage.setItem('descriptionYahoo', descriptionYahoo);
+        localStorage.setItem('descriptionJimoti', descriptionJimoti);
+
+        window.location.href = '/static/generate.html';
+      });
+    });
+  </script>
+
+
+
+</body>
+
+</html>

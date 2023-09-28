@@ -1,0 +1,179 @@
+* {
+  background-color: #F5F5F5;
+}
+
+
+
+
+/* スタイルのリセット */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* 全体のレイアウト */
+.wrapper {
+  display: flex;
+  background-color: #F5F5F5;
+}
+
+label{
+  color: #1B1B1B;
+  text-align: center;
+  font-family: Tsunagi Gothic Black;
+  font-size: 22px;
+  font-style: normal;
+  font-weight: 900;
+  line-height: normal;
+  padding: 24px 0px;
+}
+
+
+.container{
+  width: 100vw;
+  background-color: #F5F5F5;
+  margin: 0px;
+  padding: 0px;
+}
+
+
+
+/* サイドバーのスタイリング */
+.sidebar {
+  width: 270px;
+  /* サイドバーの幅を設定 */
+  height: 100vh;
+  /* 画面の高さ全体 */
+  background: #f5f5f5;
+  /* パディング */
+  position: fixed;
+  /* 固定位置 */
+  border-right: 1px solid #E2E2E2;
+}
+
+.sidebar img{
+  margin: 0px auto;
+  text-align: center;  
+  padding: 54px 0px;
+  display: block;
+
+}
+
+.sidebar .logocontainer{
+  width: 268px;
+  border-bottom: 1px solid #E2E2E2;
+  text-align: center;
+}
+
+
+.sidebar .logocontainer img{
+}
+
+
+/* サイドバー内のリストのスタイリング */
+.sidebar ul {
+  list-style-type: none;
+}
+
+.sidebar ul li {
+  margin: 10px 0;
+  font-size: 18px;
+  color: #1B1B1B;
+  text-align: center;
+  font-family: Tsunagi Gothic Black;
+  font-size: 22px;
+  font-style: normal;
+  font-weight: 900;
+  line-height: normal;
+}
+.sidebar .doneicon{
+  display: none;
+}
+
+.sidebar .menucontent{
+  margin: 0px;
+  padding: 24px 0px 32px 0px;
+  border-bottom: 1px solid #E2E2E2;
+}
+
+
+.sidebar .activemenu{
+  color: #4EDB4B;
+  background-color: #FFF;
+  position: relative;
+}
+
+.sidebar .activemenu .doneicon{
+  display:block;
+  position: absolute;
+  top: 110px;
+  left: 160px;
+  padding: 0px;
+  margin: 0px;
+}
+
+.sidebar .activemenu img{
+  color: #4EDB4B;
+  background-color: #FFF;
+  padding: 16px 0px 36px 0px;
+}
+
+
+/* コンテンツエリアのスタイリング */
+.content {
+  margin-left: 270px;
+  /* サイドバーの幅とパディングの合計 */
+  padding: 20px;
+  width: calc(100% - 270px);
+  /* 全体の幅からサイドバーの幅を引く */
+  height: 100vh;
+  overflow-y: auto;
+  /* 縦方向のスクロールを許可 */
+}
+
+.titlecontainer{
+  color: #1B1B1B;
+  text-align: center;
+  font-family: Tsunagi Gothic Black;
+  font-size: 40px;
+  font-style: normal;
+  font-weight: 900;
+  line-height: normal;
+  margin-top: 80px;
+  margin-bottom: 42px;
+}
+
+
+.active{
+  color: #FFF;
+text-align: center;
+font-family: Tsunagi Gothic Black;
+font-size: 24px;
+font-style: normal;
+font-weight: 900;
+line-height: normal;
+border-radius: 100px;
+background: #71E26F;
+padding: 14px 16px;
+border: none;
+}
+
+.btn{
+    color: #1B1B1B;
+  text-align: center;
+  font-family: Tsunagi Gothic Black;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 900;
+  line-height: normal;
+  border-radius: 100px;
+  background: #E9E9E9;
+  padding: 14px 16px;
+  border: none;
+}
+
+.form-group textarea {
+  border-radius: 12px;
+  height: 60vh;
+}

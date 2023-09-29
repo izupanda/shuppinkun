@@ -29,11 +29,11 @@
         <li class="menucontent activemenu"><a href="price.html"><img src="images/priceicon-a.svg" alt="商品情報を作る"
               width="72px" class="icon"> <img src="images/done.svg" alt="商品情報を作る" width="24px" class="doneicon">
             販売価格を考える</a> </li>
-        <li class="menucontent"> 
+        <li class="menucontent">
           <a href="list.html">
-            
-            <img src="images/listicon.svg" alt="代わりに出品する" width="80px" class="icon"> <img
-            src="images/done.svg" alt="代わりに出品する" width="24px" class="doneicon none"> 代わりに出品する
+
+            <img src="images/listicon.svg" alt="代わりに出品する" width="80px" class="icon"> <img src="images/done.svg"
+              alt="代わりに出品する" width="24px" class="doneicon none"> 代わりに出品する
           </a>
         </li>
       </ul>
@@ -49,20 +49,27 @@
         <p id="product-price">Price: </p>
 
         <script>
-          $(document).ready(function() {
-            $.get("/get-price", function(data) {
+          $(document).ready(function () {
+            console.log('Document is ready');
+            // 商品名を何らかの方法で取得する。例えば、localStorage から。
+            var productName = localStorage.getItem("productName");  // index.htmlで設定された値
+
+            console.log('Making a GET request');
+            $.get(`/get-price?query=${productName}`, function (data) {
               console.log('Received data:', data);
-              const result = JSON.parse(data);
-              $("#product-title").text(result.title);
-              $("#product-image").attr("src", result.image_url);
-              $("#product-price").append(result.price);
+              if (data.title && data.price && data.image_url) {
+                $("#product-title").text(data.title);
+                $("#product-image").attr("src", data.image_url);
+                $("#product-price").append(data.price);
+              }
             })
-            .fail(function(jqXHR, textStatus, errorThrown) { 
-              console.log('Request failed:', textStatus, errorThrown);
-            });
+              .fail(function (jqXHR, textStatus, errorThrown) {
+                console.log('Request failed:', textStatus, errorThrown);
+              });
           });
+
         </script>
-        
+
       </div>
     </div>
   </div>

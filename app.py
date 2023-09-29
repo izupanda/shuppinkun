@@ -1,20 +1,21 @@
-# app.py
-from flask import Flask, jsonify
-from scrape_amazon import scrape_amazon  # ここでスクレイピング関数をインポート
+from flask import Flask, request, jsonify
+from scrape_amazon import scrape_amazon  # スクレイピングの関数をインポート
 
 app = Flask(__name__)
 
-@app.route('/get-price')
+@app.route('/get-price', methods=['GET'])
 def get_price():
-    # Amazonからデータをスクレイピング
-    url = "https://www.amazon.co.jp/some-product-url"  # 実際のAmazonの商品URLを設定してください。
-    result = scrape_amazon(url)  # スクレイピング関数を呼び出して結果を取得
+    
+    query = request.args.get('query')  # クエリパラメータから検索文字列を取得
+    if not query:
+        return jsonify({"error": "Query parameter is missing"}), 400
 
-    if result:  # スクレイピングが成功した場合
-        print("Sending response:", result)
+    result = scrape_amazon(query)
+    if result:
+
         return jsonify(result)
-    else:  # スクレイピングが失敗した場合
-        return jsonify({"error": "Failed to scrape data"}), 500
+    else:
+        return jsonify({"error": "Could not fetch data"}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)

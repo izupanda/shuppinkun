@@ -59,8 +59,9 @@
     counter++;
   });
 
-  $('#nextButton').click(function () {
-    var productName = $('#productName').val(); // ここ
+  $('#nextButton').click(function() {
+  var productName = $('#productName').val();
+  localStorage.setItem("productName", productName);
     var cautions = $('.caution').map(function () { return $(this).val(); }).get();
 
     // サーバーに商品名と商品の注意事項を送信する

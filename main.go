@@ -43,6 +43,11 @@ type AmazonProduct struct {
 	Title    string `json:"title"`
 }
 
+type GenerateDescriptionRequest struct {
+	ProductName     string   `json:"productName"`
+	ProductWarnings []string `json:"productWarnings"` // 変更点
+}
+
 func handleGenerateDescription(w http.ResponseWriter, r *http.Request) {
 	log.Println("Received a request for generating a product description.")
 

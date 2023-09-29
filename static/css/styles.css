@@ -291,8 +291,9 @@ border: none;
 }
 
 #productTitle {
-  height: 30px;  /* 1行程度の高さ */
+  height: 60px;  /* 1行程度の高さ */
   resize: none;  /* ユーザーによるリサイズを不可にする */
+  padding: 16px 24px;
 }
 
 #productDescription {

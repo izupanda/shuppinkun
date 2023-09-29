@@ -16,9 +16,9 @@ type Message struct {
 	Content string `json:"content"`
 }
 
-type GenerateDescriptionRequest struct {
-	ProductName     string   `json:"productName"`
-	ProductWarnings []string `json:"productWarnings"`
+type GeneratedContent struct {
+	ProductTitle       string `json:"productTitle"`
+	ProductDescription string `json:"productDescription"`
 }
 
 type OpenAIRequestBody struct {
@@ -44,20 +44,22 @@ type AmazonProduct struct {
 }
 
 func handleGenerateDescription(w http.ResponseWriter, r *http.Request) {
-	log.Println("Received a request for generating product description.")
+	log.Println("Received a request for generating a product description.")
 
 	var requestBody GenerateDescriptionRequest
 	err := json.NewDecoder(r.Body).Decode(&requestBody)
 	if err != nil {
 		http.Error(w, "Invalid request body", http.StatusBadRequest)
-		log.Println("Error in decoding the request body:", err)
+		log.Println("Error decoding the request body:", err)
 		return
 	}
 	log.Println("Successfully decoded the request body.")
 
 	openAIKey := os.Getenv("OPENAI_API_KEY")
 	if openAIKey == "" {
+		http.Error(w, "OPENAI_API_KEY is not set", http.StatusInternalServerError)
 		log.Fatal("OPENAI_API_KEY is not set")
+		return
 	}
 
 	messages := []Message{
@@ -81,39 +83,36 @@ func handleGenerateDescription(w http.ResponseWriter, r *http.Request) {
 	requestBodyBytes, err := json.Marshal(openAIRequest)
 	if err != nil {
 		http.Error(w, "Internal server error", http.StatusInternalServerError)
-		log.Println("Error in marshaling the OpenAI request body:", err)
+		log.Println("Error marshaling the OpenAI request body:", err)
 		return
 	}
 	log.Println("Successfully marshaled the OpenAI request body.")
-	log.Println("OpenAI API Request:", openAIRequest)
 
 	apiEndpoint := "https://api.openai.com/v1/chat/completions"
 	req, err := http.NewRequest("POST", apiEndpoint, bytes.NewBuffer(requestBodyBytes))
 	if err != nil {
 		http.Error(w, "Internal server error", http.StatusInternalServerError)
-		log.Println("Error in creating the OpenAI API request:", err)
+		log.Println("Error creating the OpenAI API request:", err)
 		return
 	}
 
-	req.Header.Set("Authorization", "Bearer "+openAIKey)
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", openAIKey))
 	req.Header.Set("Content-Type", "application/json")
 
 	client := &http.Client{}
-	log.Println("Sending request to OpenAI API...")
 	resp, err := client.Do(req)
 	if err != nil {
 		http.Error(w, "Internal server error", http.StatusInternalServerError)
-		log.Println("Error in sending the request to OpenAI API:", err)
+		log.Println("Error sending the request to OpenAI API:", err)
 		return
 	}
-	log.Println("Received response from OpenAI API.")
 	defer resp.Body.Close()
 
 	if resp.StatusCode >= 400 {
 		bodyBytes, _ := ioutil.ReadAll(resp.Body)
 		bodyString := string(bodyBytes)
 		http.Error(w, "OpenAI API returned an error", http.StatusInternalServerError)
-		log.Printf("Error: OpenAI API returned status code %d, body: %s", resp.StatusCode, bodyString)
+		log.Printf("OpenAI API returned status code %d, body: %s", resp.StatusCode, bodyString)
 		return
 	}
 
@@ -121,11 +120,9 @@ func handleGenerateDescription(w http.ResponseWriter, r *http.Request) {
 	err = json.NewDecoder(resp.Body).Decode(&openAIResponse)
 	if err != nil {
 		http.Error(w, "Internal server error", http.StatusInternalServerError)
-		log.Println("Error in decoding the OpenAI API response:", err)
+		log.Println("Error decoding the OpenAI API response:", err)
 		return
 	}
-	log.Println("Successfully decoded the OpenAI API response.")
-	log.Println("OpenAI API Response:", openAIResponse)
 
 	if len(openAIResponse.Choices) > 0 {
 		w.Header().Set("Content-Type", "application/json")
@@ -133,8 +130,7 @@ func handleGenerateDescription(w http.ResponseWriter, r *http.Request) {
 		log.Println("Generated product description:", openAIResponse.Choices[0].Message.Content)
 	} else {
 		http.Error(w, "OpenAI API returned empty choices", http.StatusInternalServerError)
-		log.Println("Error: OpenAI API returned empty choices")
-		return
+		log.Println("OpenAI API returned empty choices")
 	}
 }
 

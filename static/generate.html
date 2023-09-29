@@ -76,13 +76,16 @@
             document.execCommand('copy');
             alert("コピーしました");
           }
-
+        
           $(function () {
-            // ページ読み込み時にlocalStorageから商品説明文を取得
+            // ページ読み込み時にlocalStorageから商品説明文と商品タイトルを取得
             let description = localStorage.getItem('generatedDescription') || '商品説明文がここに表示されます。';
+            let title = localStorage.getItem('generatedTitle') || '商品タイトルがここに表示されます。';
             $('#productDescription').val(description);
+            $('#productTitle').val(title);
           });
         </script>
+        
       </div>
     </div>
   </div>

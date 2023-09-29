@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"os/exec"
 )
 
 type Message struct {
@@ -36,6 +37,12 @@ type OpenAIResponse struct {
 	} `json:"choices"`
 }
 
+type AmazonProduct struct {
+	Price    string `json:"price"`
+	ImageURL string `json:"image_url"`
+	Title    string `json:"title"`
+}
+
 func handleGenerateDescription(w http.ResponseWriter, r *http.Request) {
 	log.Println("Received a request for generating product description.")
 
@@ -60,7 +67,7 @@ func handleGenerateDescription(w http.ResponseWriter, r *http.Request) {
 		},
 		{
 			Role:    "user",
-			Content: fmt.Sprintf("メルカリに出品するための商品説明文を生成してください。商品名は%sです。商品に関する注意事項として、%sを、商品説明に含めるようにしてください。", requestBody.ProductName, requestBody.ProductWarnings),
+			Content: fmt.Sprintf("メルカリに出品するための商品説明文を生成してください。商品名は%sです。商品に関する注意事項として、%sを、商品説明に含めるようにしてください。文体はシンプルにして、商品説明は短めにお願いします。", requestBody.ProductName, requestBody.ProductWarnings),
 		},
 	}
 
@@ -131,11 +138,42 @@ func handleGenerateDescription(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func handleGetPrice(w http.ResponseWriter, r *http.Request) {
+	cmd := exec.Command("python3", "scrape_amazon.py")
+
+	var stdout, stderr bytes.Buffer
+	cmd.Stdout = &stdout
+	cmd.Stderr = &stderr
+	err := cmd.Run()
+
+	if err != nil {
+		log.Printf("Error running the python script: %s", err)
+		log.Printf("Stderr: %s", stderr.String())
+		log.Printf("Stdout: %s", stdout.String())
+		return
+	}
+	var product AmazonProduct
+	err = json.Unmarshal(stdout.Bytes(), &product)
+	if err != nil {
+		log.Printf("Error unmarshalling the python script output: %s", err)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(product)
+	if err := json.NewEncoder(w).Encode(product); err != nil {
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		log.Println("Error encoding product to JSON:", err)
+	}
+}
+
 func main() {
 	fs := http.FileServer(http.Dir("./static"))
 	http.Handle("/static/", http.StripPrefix("/static", fs))
 
 	http.HandleFunc("/generate-description", handleGenerateDescription)
+
+	http.HandleFunc("/get-price", handleGetPrice)
 
 	log.Println("Server is starting at :8080")
 	http.ListenAndServe(":8080", nil)

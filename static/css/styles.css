@@ -5,6 +5,10 @@
   box-sizing: border-box;
 }
 
+*:focus {
+  outline: none;
+}
+
 
 
 
@@ -41,11 +45,11 @@ label{
   color: #1B1B1B;
   text-align: center;
   font-family: Tsunagi Gothic Black;
-  font-size: 22px;
+  font-size: 20px;
   font-style: normal;
   font-weight: 900;
   line-height: normal;
-  padding: 24px 0px;
+  padding: 12px 0px;
 }
 
 
@@ -96,7 +100,7 @@ font-style: normal;
 font-weight: 900;
 line-height: normal;
 padding: 24px 32px 24px 40px;
-bottom: 12vh;
+bottom: 10vh;
 right: 0px;
 }
 
@@ -286,12 +290,44 @@ border: none;
   margin: 0;
 }
 
+#productTitle {
+  height: 30px;  /* 1行程度の高さ */
+  resize: none;  /* ユーザーによるリサイズを不可にする */
+}
+
+#productDescription {
+  height: 60vh;  /* 縦長にする */
+  resize: vertical;  /* 垂直方向のみリサイズ可 */
+}
+
+
+
 .form-group textarea {
+  display: block;
   border-radius: 12px;
-  height: 60vh;
-  margin-top: 24px;
+  display: block;
   width: 75vw;
   padding: 24px;
   border: 1px solid lightgray;
   background-color: rgb(252, 252, 252);
+  margin-bottom: 32px;
+}
+
+
+
+.s-titlecontainer{
+  display: flex;
+  justify-content: space-between;
+  width: 78vw;
+  padding-right: 24px;
+}
+
+.ml-auto{
+  border: 0;
+  color: gray;
+}
+
+.ml-auto{
+  border: 0;
+  color: #C6C6C6;
 }

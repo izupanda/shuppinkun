@@ -1,68 +1,91 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <!-- CSS  -->
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/styles.css">
-    <!-- JavaScript -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <link rel="icon" href="images/favicon.ico">
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <title>出品手伝いくん</title>
-</head>
-<body>
-    <div class="wrapper">
-      <div class="sidebar">
-        <div class="logocontainer">
-          <a class="navbar-brand" href="index.html"><img src="images/logo.svg" alt="ロゴ" width="140px"></a>
-        </div>
-        <ul>
-          <li class="menucontent activemenu">
-            <img src="images/generateicon-a.svg" alt="商品説明文を作る" width="72px"> <img src="images/done.svg" alt="商品説明文を作る"
-              width="24px" class="doneicon"> 商品説明文を作る
-          </li>
-          <li class="menucontent"><a href="price.html"><img src="images/priceicon.svg" alt="商品説明文を作る" width="72px"> 販売価格を考える</a> </li>
-          <li class="menucontent"> <img src="images/priceicon.svg" alt="商品説明文を作る" width="72px">代わりに出品する</li>
-        </ul>
-      </div>
-        <div class="content">
-            <div class="container">
-                <div class="titlecontainer">
-                    商品説明文を作る
-                </div>
-                <div class="btn-group-toggle" data-toggle="buttons">
-                    <label class="btn btn-secondary active">
-                        <input type="radio" name="options" class="choice" id="mercari" checked> メルカリ
-                    </label>
-                    <label class="btn btn-secondary">
-                        <input type="radio" name="options" id="yahoo" class="choice"> ヤフオク
-                    </label>
-                    <label class="btn btn-secondary">
-                        <input type="radio" name="options" id="jimoti" class="choice"> ジモティ
-                    </label>
-                </div>
-                <!-- 商品説明文を表示するテキストエリア -->
-                <div class="form-group">
-                <textarea id="productDescription"></textarea> 
-              </div>
-                <script>
-                    $(function () {
-                        // Radioボタンの変更イベント（この部分は既存のコードです）
-                        $("input[name='options']").change(function () {
-                            let marketplace = $(this).attr("id");
-                            let descriptionKey = 'description' + marketplace.charAt(0).toUpperCase() + marketplace.slice(1);
-                            let description = localStorage.getItem(descriptionKey) || 'ここに' + marketplace + '向けの商品説明文が表示されます。';
-                            $('#productDescription').val(description);
-                        });
 
-                        // ページ読み込み時にlocalStorageから商品説明文を取得
-                        let description = localStorage.getItem('generatedDescription') || '商品説明文がここに表示されます。';
-                        $('#productDescription').val(description);
-                    });
-                </script>
-            </div>
-        </div>
+<head>
+  <!-- CSS  -->
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+  <!-- JavaScript -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <link rel="icon" href="images/favicon.ico">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <title>出品手伝いくん</title>
+</head>
+
+<body>
+  <div class="wrapper">
+    <div class="sidebar">
+      <div class="logocontainer">
+        <a class="navbar-brand" href="index.html"><img src="images/logo.svg" alt="ロゴ" width="140px"></a>
+      </div>
+      <ul>
+        <li class="menucontent activemenu">
+          <img src="images/generateicon-a.svg" alt="商品情報を作る" width="72px"> <img src="images/done.svg" alt="商品情報を作る"
+            width="24px" class="doneicon"> 商品情報を作る
+        </li>
+        <li class="menucontent"><a href="price.html"><img src="images/priceicon.svg" alt="商品情報を作る" width="72px">
+            販売価格を考える</a> </li>
+        <li class="menucontent">
+          <a href="list.html">
+            <img src="images/listicon.svg" alt="商品情報を作る" width="80px">代わりに出品する
+          </a>
+        </li>
+      </ul>
     </div>
+    <div class="content">
+      <div class="container">
+        <div class="titlecontainer">
+          商品情報を作る
+        </div>
+        <!-- 商品タイトルを表示するテキストエリア -->
+        <div class="form-group align-items-center">
+          <div class="s-titlecontainer">
+
+            <label for="productTitle" class="m-0">商品タイトル</label>
+            <button type="button" onclick="copyToClipboard('#productTitle')" class="ml-auto">
+              <i class="fas fa-copy"></i>
+            </button>
+
+          </div>
+          <div class="product-title"></div>
+          <textarea id="productTitle" class=" w-100 mt-2"></textarea>
+          </div>
+        </div>
+        <!-- 商品説明文を表示するテキストエリア -->
+        <div class="form-group align-items-center">
+          <div class="s-titlecontainer">
+
+            <label for="productDescription" class="m-0">商品説明文</label>
+            <button type="button" onclick="copyToClipboard('#productDescription')" class="ml-auto">
+              <i class="fas fa-copy"></i>
+            </button>
+          </div>
+          <textarea id="productDescription" class="productDescription w-100 mt-2"></textarea>
+          <button type="button" id="nextButton" class="mt-2">次へ進む →</button>
+        </div>
+        <script>
+          function copyToClipboard(elementId) {
+            const el = document.querySelector(elementId);
+            const range = document.createRange();
+            range.selectNodeContents(el);
+            const sel = window.getSelection();
+            sel.removeAllRanges();
+            sel.addRange(range);
+            document.execCommand('copy');
+            alert("コピーしました");
+          }
+
+          $(function () {
+            // ページ読み込み時にlocalStorageから商品説明文を取得
+            let description = localStorage.getItem('generatedDescription') || '商品説明文がここに表示されます。';
+            $('#productDescription').val(description);
+          });
+        </script>
+      </div>
+    </div>
+  </div>
 </body>
+
 </html>

@@ -22,14 +22,20 @@
       <ul>
         <li class="menucontent">
           <a href="generate.html">
-            <img src="images/generateicon.svg" alt="商品説明文を作る" width="72px" class="icon"> <img src="images/done.svg" alt="商品説明文を作る"
-              width="24px" class="doneicon"> 商品説明文を作る
+            <img src="images/generateicon.svg" alt="商品説明文を作る" width="72px" class="icon"> <img src="images/done.svg"
+              alt="商品説明文を作る" width="24px" class="doneicon"> 商品情報を作る
           </a>
         </li>
-        <li class="menucontent activemenu"><a href="price.html"><img src="images/priceicon-a.svg" alt="商品説明文を作る"
-              width="72px" class="icon"> <img src="images/done.svg" alt="商品説明文を作る" width="24px" class="doneicon"> 販売価格を考える</a> </li>
-        <li class="menucontent"> <img src="images/priceicon.svg" alt="商品説明文を作る" width="72px" class="icon"> <img src="images/done.svg"
-            alt="商品説明文を作る" width="24px" class="doneicon none"> 代わりに出品する</li>
+        <li class="menucontent activemenu"><a href="price.html"><img src="images/priceicon-a.svg" alt="商品情報を作る"
+              width="72px" class="icon"> <img src="images/done.svg" alt="商品情報を作る" width="24px" class="doneicon">
+            販売価格を考える</a> </li>
+        <li class="menucontent"> 
+          <a href="list.html">
+            
+            <img src="images/listicon.svg" alt="代わりに出品する" width="80px" class="icon"> <img
+            src="images/done.svg" alt="代わりに出品する" width="24px" class="doneicon none"> 代わりに出品する
+          </a>
+        </li>
       </ul>
     </div>
     <div class="content">
@@ -38,12 +44,28 @@
           販売価格を考える
         </div>
 
-        <div class="content">
-          <textarea></textarea>
-          <textarea></textarea>
-          <textarea></textarea>
-        </div>
+        <h1 id="product-title">Product Title</h1>
+        <img id="product-image" src="" alt="Product Image">
+        <p id="product-price">Price: </p>
 
+        <script>
+          $(document).ready(function() {
+            $.get("/get-price", function(data) {
+              console.log('Received data:', data);
+              const result = JSON.parse(data);
+              $("#product-title").text(result.title);
+              $("#product-image").attr("src", result.image_url);
+              $("#product-price").append(result.price);
+            })
+            .fail(function(jqXHR, textStatus, errorThrown) { 
+              console.log('Request failed:', textStatus, errorThrown);
+            });
+          });
+        </script>
+        
+      </div>
+    </div>
+  </div>
 </body>
 
 </html>

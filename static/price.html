@@ -50,23 +50,25 @@
 
         <script>
           $(document).ready(function () {
-            console.log('Document is ready');
             // 商品名を何らかの方法で取得する。例えば、localStorage から。
-            var productName = localStorage.getItem("productName");  // index.htmlで設定された値
+            var productName = localStorage.getItem("productName");
+            console.log('ProductName:', productName);  // この行を追加
 
-            console.log('Making a GET request');
-            $.get(`/get-price?query=${productName}`, function (data) {
-              console.log('Received data:', data);
-              if (data.title && data.price && data.image_url) {
-                $("#product-title").text(data.title);
-                $("#product-image").attr("src", data.image_url);
-                $("#product-price").append(data.price);
-              }
-            })
+            $.get(`/get-price?query=${productName}`)
+              .done(function (data) {
+                console.log('Received data:', data);  // デバッグ用
+                if (data.title && data.price && data.image_url) {
+                  $("#product-title").text(data.title);
+                  $("#product-image").attr("src", data.image_url);
+                  $("#product-price").text(`Price: ${data.price}`);
+                }
+              })
               .fail(function (jqXHR, textStatus, errorThrown) {
-                console.log('Request failed:', textStatus, errorThrown);
+                // ここで具体的なエラー内容も出力
+                console.log('Request failed:', textStatus, errorThrown, jqXHR.responseText);
               });
           });
+
 
         </script>
 

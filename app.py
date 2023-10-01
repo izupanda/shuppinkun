@@ -12,7 +12,7 @@ def get_price():
 
     result = scrape_amazon(query)
     if result:
-
+        print("Before jsonify:", result)  # この行を追加
         return jsonify(result)
     else:
         return jsonify({"error": "Could not fetch data"}), 500

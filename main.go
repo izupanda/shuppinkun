@@ -74,7 +74,7 @@ func handleGenerateDescription(w http.ResponseWriter, r *http.Request) {
 		},
 		{
 			Role:    "user",
-			Content: fmt.Sprintf("メルカリに出品するための商品説明文を生成してください。商品名は%sです。商品に関する注意事項として、%sを、商品説明に含めるようにしてください。文体はシンプルにして、商品説明は短めにお願いします。", requestBody.ProductName, requestBody.ProductWarnings),
+			Content: fmt.Sprintf("メルカリに出品するための商品説明文を生成してください。商品名は%sです。商品に関する注意事項として、%sを、商品説明に含めるようにしてください。文体はシンプルな箇条書きで、商品事態に関する説明は短めにお願いします。最初に【商品タイトル】とつけた後に、商品タイトルを記述してください。それ以降に【商品説明文】とつけた後に、商品説明文を記述してください。", requestBody.ProductName, requestBody.ProductWarnings),
 		},
 	}
 
@@ -140,7 +140,8 @@ func handleGenerateDescription(w http.ResponseWriter, r *http.Request) {
 }
 
 func handleGetPrice(w http.ResponseWriter, r *http.Request) {
-	cmd := exec.Command("python3", "scrape_amazon.py")
+	query := r.URL.Query().Get("query")
+	cmd := exec.Command("python3", "scrape_amazon.py", query)
 
 	var stdout, stderr bytes.Buffer
 	cmd.Stdout = &stdout
@@ -150,18 +151,18 @@ func handleGetPrice(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Printf("Error running the python script: %s", err)
 		log.Printf("Stderr: %s", stderr.String())
-		log.Printf("Stdout: %s", stdout.String())
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
 		return
 	}
 	var product AmazonProduct
 	err = json.Unmarshal(stdout.Bytes(), &product)
 	if err != nil {
 		log.Printf("Error unmarshalling the python script output: %s", err)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
 		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(product)
 	if err := json.NewEncoder(w).Encode(product); err != nil {
 		http.Error(w, "Internal server error", http.StatusInternalServerError)
 		log.Println("Error encoding product to JSON:", err)

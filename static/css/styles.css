@@ -52,24 +52,102 @@ label{
   padding: 12px 0px;
 }
 
-
-.container{
-  width: 100vw;
+.container {
   background-color: #F5F5F5;
-  margin: 0px;
-  padding: 0px;
+  margin: 0 auto;
+  width: 100vw;
+
+  justify-content: center;
+  text-align: center;
 }
+
 form {
   text-align: center;
-  width: 100vw;
+  width: 100%;
 }
 
 .form-group {
   display: inline-block;
-  margin-right: 24px;
-  margin-bottom: 24px;
+  margin: 0 auto;
   text-align: left;
+  justify-content: left;
+
 }
+
+
+.photo-upload {
+  /* width: 100%; この行は削除またはコメントアウト */
+  margin: 0 auto;
+  background-color: rgb(234, 234, 234);
+  border: 2px dashed #ccc;
+  padding: 20px;
+  text-align: center;
+  border-radius: 8px;
+  width: 800px;
+  height: 180px;
+  line-height: 28px;
+  margin-bottom: 24px;
+  align-items: center;
+  color: gray;
+  /* 新しいスタイルを追加 */
+  min-width: 300px; /* または好きなサイズに */
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+}
+
+.photo-upload-container {
+  display: flex;
+  justify-content: center;
+}
+
+
+.highlight {
+  border-color: blue;
+}
+
+#imagePreview{
+  margin-right: 24px;
+}
+
+
+.image-container {
+  position: relative;
+  margin-right: 10px;
+}
+
+.close-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  cursor: pointer;
+}
+
+
+
+#addCaution {
+  display: block;
+  margin: 0 auto;
+  margin-top: 32px;
+}
+
+.custom-select {
+  -webkit-appearance: none;
+  appearance: none;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16"><path d="M3.204 5h9.592L8 9.481 3.204 5zm-.753.659 4.797 4.8a1 1 0 0 0 1.414 0l4.8-4.8c.27-.27.083-.659-.303-.659H3.253a.483.483 0 0 0-.302.659z"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 1.5em;
+  padding-right: 2rem;  /* 矢印とテキストが重ならないように */
+  height: 2rem;         /* 縦幅を設定 */
+}
+
+
+.placeholder-option {
+  color: #ccc;
+}
+
 
 .round-form{
   border-radius: 200px;
@@ -78,15 +156,15 @@ form {
   padding: 16px 32px;
   background-color: #FFF;
   width: 800px;
+  height: 60px;
   margin-bottom: 12px;
 }
 
 
-#addCaution {
-  display: block;
-  margin: 0 auto;
-  margin-top: 32px;
-}
+
+
+
+
 #nextButton{
   position: fixed;
   border-radius: 100px 0px 0px 100px;
@@ -284,7 +362,10 @@ border: none;
 
 }
 
-
+#upload-text{
+  background-color: inherit;
+  text-align: center;
+}
 
 .form-group{
   margin: 0;
@@ -295,6 +376,7 @@ border: none;
   resize: none;  /* ユーザーによるリサイズを不可にする */
   padding: 16px 24px;
 }
+
 
 #productDescription {
   height: 60vh;  /* 縦長にする */

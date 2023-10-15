@@ -21,6 +21,19 @@
   </nav>
 
   <div class="container">
+    <div class="photo-upload-container">
+      <div class="form-group">
+        <label for="photo-upload">商品の写真</label>
+        <input type="file" id="fileInput" style="display:none" multiple>
+        <div class="photo-upload" id="photo-upload">
+          <span id="upload-text"> <!-- この行を追加 -->
+            ドラッグ＆ドロップ<br>または<br>クリックして写真をアップロード
+          </span>
+          <!-- 画像を表示するエリアを追加 -->
+          <div id="imagePreview"></div>
+        </div>
+      </div>
+    </div>
     <form>
       <div class="form-group">
         <label for="productName">商品の名前</label>
@@ -29,8 +42,18 @@
 
       <div id="cautions">
         <div class="form-group">
-          <label for="caution1">商品の注意事項</label>
-          <input type="text" class="round-form caution" id="caution1" placeholder="注意事項を入力してください">
+          <label for="caution1">商品に関する情報 / 注意事項</label>
+          <!-- 注意事項 -->
+          <select class="round-form caution custom-select" id="caution1">
+            <option value="" selected>状態を選択してください</option>
+            <option value="新品、未使用">新品、未使用</option>
+            <option value="未使用に近い">未使用に近い</option>
+            <option value="目立った傷や汚れなし">目立った傷や汚れなし</option>
+            <option value="やや傷や汚れあり">やや傷や汚れあり</option>
+            <option value="傷や汚れあり">傷や汚れあり</option>
+            <option value="全体的に状態が悪い">全体的に状態が悪い</option>
+          </select>
+
           <input type="text" class="round-form caution" id="caution2" placeholder="注意事項を入力してください">
           <input type="text" class="round-form caution" id="caution3" placeholder="注意事項を入力してください">
           <input type="text" class="round-form caution" id="caution4" placeholder="注意事項を入力してください">
@@ -45,43 +68,154 @@
       <button type="button" id="nextButton">次へ進む →</button>
     </form>
   </div>
-
   <script>
-   $(document).ready(function () {
-  var counter = 6;
+    $(document).ready(function () {
+      var counter = 6;
+      var uploadCounter = 0; // アップロードされたファイル数を追跡
+      const fileInput = document.getElementById('fileInput');
+      const dropArea = document.getElementById('photo-upload');
+      const uploadText = document.getElementById('upload-text'); // アップロードテキストの要素
 
-  $('#addCaution').click(function () {
-    var newCaution = `
-          <div class="form-group">
-              <input type="text" class="round-form caution" id="caution${counter}" placeholder="注意事項を入力してください">
-          </div>`;
-    $('#cautions').append(newCaution);
-    counter++;
-  });
+      dropArea.addEventListener('click', function () {
+        if (uploadCounter < 5) {
+          fileInput.click();
+        } else {
+          alert('最大5枚までアップロードできます');
+        }
+      }, false);
 
-  $('#nextButton').click(function() {
-  var productName = $('#productName').val();
-  localStorage.setItem("productName", productName);
-    var cautions = $('.caution').map(function () { return $(this).val(); }).get();
+      fileInput.addEventListener('change', function () {
+        const files = fileInput.files;
+        if (uploadCounter + files.length <= 5) {
+          handleFiles(files);
+        } else {
+          alert('最大5枚までアップロードできます');
+        }
+      });
 
-    // サーバーに商品名と商品の注意事項を送信する
-    $.ajax({
-      type: 'POST',
-      url: '/generate-description',
-      data: JSON.stringify({ productName: productName, productWarnings: cautions }),
-      contentType: 'application/json',
-      success: function (data) {
-        // ChatGPTのプロンプトを実行して、2ページ目に結果を表示する
-        localStorage.setItem('generatedDescription', data);
-        window.location.href = 'generate.html';
-      },
-      error: function (jqXHR, textStatus, errorThrown) {
-        console.log("AJAX Error:", textStatus);
+      function handleDrop(e) {
+        let dt = e.dataTransfer;
+        let files = dt.files;
+
+        if (uploadCounter + files.length <= 5) {
+          fileInput.files = files;
+          handleFiles(files);
+        } else {
+          alert('最大5枚までアップロードできます');
+        }
       }
+
+      // 既存のイベントリスナー
+      ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dropArea.addEventListener(eventName, preventDefaults, false);
+      });
+
+      function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+
+
+      ['dragenter', 'dragover'].forEach(eventName => {
+        dropArea.addEventListener(eventName, highlight, false);
+      });
+
+      ['dragleave', 'drop'].forEach(eventName => {
+        dropArea.addEventListener(eventName, unhighlight, false);
+      });
+
+      function highlight(e) {
+        dropArea.classList.add('highlight');
+      }
+
+      function unhighlight(e) {
+        dropArea.classList.remove('highlight');
+      }
+
+      dropArea.addEventListener('drop', handleDrop, false);
+
+
+      function handleFiles(files) {
+        if (uploadCounter + files.length <= 5) {
+          ([...files]).forEach(uploadFile);
+          uploadCounter += files.length;
+        }
+
+        if (uploadCounter > 0) {
+          uploadText.style.display = 'none';  // テキストを非表示にする
+        }
+      }
+
+      function uploadFile(file) {
+        if (file.type.startsWith('image/')) {
+          const reader = new FileReader();
+          reader.readAsDataURL(file);
+          reader.onloadend = function () {
+            const img = new Image();
+            img.src = reader.result;
+            img.width = 140;
+            img.height = 140;
+
+            // 画像と削除ボタンを含むコンテナを作成
+            const imageContainer = document.createElement('div');
+            imageContainer.className = 'image-container';
+
+            const closeButton = document.createElement('span');
+            closeButton.className = 'close-button';
+            closeButton.textContent = '✖️';
+            closeButton.onclick = function () {
+              imageContainer.remove();
+              uploadCounter--;
+              if (uploadCounter === 0) {
+                uploadText.style.display = 'block';
+              }
+            };
+
+            imageContainer.appendChild(img);
+            imageContainer.appendChild(closeButton);
+            dropArea.appendChild(imageContainer);
+          };
+        }
+      }
+      $('#addCaution').click(function () {
+        var newCaution = `
+            <div class="form-group">
+                <input type="text" class="round-form caution" id="caution${counter}" placeholder="注意事項を入力してください">
+            </div>`;
+        $('#cautions').append(newCaution);
+        counter++;
+      });
+
+      $('#nextButton').click(function () {
+        var productName = $('#productName').val();
+        localStorage.setItem("productName", productName);
+        var cautions = $('.caution').map(function () { return $(this).val(); }).get();
+
+        $.ajax({
+          type: 'POST',
+          url: '/generate-description',
+          data: JSON.stringify({ productName: productName, productWarnings: cautions }),
+          contentType: 'application/json',
+          success: function (data) {
+            localStorage.setItem('generatedDescription', data);
+            window.location.href = 'generate.html';
+          },
+          error: function (jqXHR, textStatus, errorThrown) {
+            console.log("AJAX Error:", textStatus);
+          }
+        });
+      });
+
+      $('#caution1').change(function () {
+        if ($(this).val() === 'placeholder') {
+          $(this).addClass('placeholder-option');
+        } else {
+          $(this).removeClass('placeholder-option');
+        }
+      });
     });
-  }); // ここで関数が閉じられています
-}); // ここで関数が閉じられています
   </script>
+
 
 </body>
 

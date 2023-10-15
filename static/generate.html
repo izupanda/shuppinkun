@@ -54,16 +54,18 @@
         </div>
       </div>
       <!-- 商品説明文を表示するテキストエリア -->
-      <div class="form-group align-items-center">
-        <div class="s-titlecontainer">
+      <div class="container">
+        <div class="form-group align-items-center">
+          <div class="s-titlecontainer">
 
-          <label for="productDescription" class="m-0">商品説明文</label>
-          <button type="button" onclick="copyToClipboard('#productDescription')" class="ml-auto">
-            <i class="fas fa-copy"></i>
-          </button>
+            <label for="productDescription" class="m-0">商品説明文</label>
+            <button type="button" onclick="copyToClipboard('#productDescription')" class="ml-auto">
+              <i class="fas fa-copy"></i>
+            </button>
+          </div>
+          <textarea id="productDescription" class="productDescription w-100 mt-2"></textarea>
+          <button type="button" id="nextButton" class="mt-2">次へ進む →</button>
         </div>
-        <textarea id="productDescription" class="productDescription w-100 mt-2"></textarea>
-        <button type="button" id="nextButton" class="mt-2">次へ進む →</button>
       </div>
       <script>
         function copyToClipboard(elementId) {
@@ -90,31 +92,35 @@
           $('#productTitle').val(storedTitle);
 
           // サーバーからのレスポンスを処理
+          // サーバーからのレスポンスを処理
           $.ajax({
-            url: "/your-api-endpoint",
-            type: "POST",
+            url: "/get-price",
+            type: "GET",
             data: {
-              // 送信するデータ
+              query: localStorage.getItem('productName')
             },
             success: function (response) {
-              // responseはサーバーからのレスポンス
-              // この例では、ChatGPTからの生成結果が response.generatedText に含まれていると仮定しています。
-              let generatedText = response.generatedText;
+              // responseはサーバーからのレスポンス。
+              // この例では、GPT-3からの生成結果が response に直接含まれていると仮定しています。
 
-              let titleMatch = generatedText.match(/&#8203;``oaicite:{"number":4,"invalid_reason":"Malformed citation 【商品タイトル】"}``&#8203;\n([\s\S]*?)\n&#8203;``oaicite:{"number":5,"invalid_reason":"Malformed citation 【商品説明文】"}``&#8203;/);
-              let descriptionMatch = generatedText.match(/&#8203;``oaicite:{"number":6,"invalid_reason":"Malformed citation 【商品説明文】"}``&#8203;\n([\s\S]*)$/);
+              let generatedText = response;
 
-              let title = titleMatch ? titleMatch[1].trim() : defaultTitle;
-              let description = descriptionMatch ? descriptionMatch[1].trim() : defaultDescription;
+              // 正規表現を用いて商品タイトルと商品説明文を分割
+              let titlePattern = /&#8203;``oaicite:{"number":1,"invalid_reason":"Malformed citation 【商品タイトル】"}``&#8203;\s*([\s\S]*?)\s*&#8203;``oaicite:{"number":2,"invalid_reason":"Malformed citation 【商品説明文】"}``&#8203;/;
+              let descriptionPattern = /&#8203;``oaicite:{"number":3,"invalid_reason":"Malformed citation 【商品説明文】"}``&#8203;\s*([\s\S]*)/;
 
+              let titleMatch = generatedText.match(titlePattern);
+              let descriptionMatch = generatedText.match(descriptionPattern);
 
-              localStorage.setItem('generatedDescription', description);
-              localStorage.setItem('generatedTitle', title);
+              let title = titleMatch ? titleMatch[1].trim() : "デフォルトの商品タイトル";
+              let description = descriptionMatch ? descriptionMatch[1].trim() : "デフォルトの商品説明文";
 
-              $('#productDescription').val(description);
+              // 商品タイトルと商品説明文をテキストエリアにセット
               $('#productTitle').val(title);
+              $('#productDescription').val(description);
             }
           });
+
         });
       </script>
 

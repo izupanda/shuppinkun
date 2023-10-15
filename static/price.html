@@ -44,19 +44,20 @@
           販売価格を考える
         </div>
 
-        <h1 id="product-title">Product Title</h1>
-        <img id="product-image" src="" alt="Product Image">
-        <p id="product-price">Price: </p>
-
+        <h1 id="product-title">商品名</h1>
+        <img id="product-image" src="" alt="商品画像">
+        <p id="product-price">販売価格: </p>
         <script>
           $(document).ready(function () {
-            // 商品名を何らかの方法で取得する。例えば、localStorage から。
             var productName = localStorage.getItem("productName");
-            console.log('ProductName:', productName);  // この行を追加
+            console.log('ProductName:', productName); // この行でproductNameをコンソールに出力
 
-            $.get(`/get-price?query=${productName}`)
+            var queryUrl = `/get-price?query=${productName}`;
+            console.log('Query URL:', queryUrl);  // この行で生成されたURLをコンソールに出力
+
+            $.get(queryUrl)
               .done(function (data) {
-                console.log('Received data:', data);  // デバッグ用
+                console.log('Received data:', data);
                 if (data.title && data.price && data.image_url) {
                   $("#product-title").text(data.title);
                   $("#product-image").attr("src", data.image_url);
@@ -64,11 +65,9 @@
                 }
               })
               .fail(function (jqXHR, textStatus, errorThrown) {
-                // ここで具体的なエラー内容も出力
                 console.log('Request failed:', textStatus, errorThrown, jqXHR.responseText);
               });
           });
-
 
         </script>
 

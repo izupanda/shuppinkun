@@ -28,7 +28,7 @@
         </li>
         <li class="menucontent activemenu"><a href="price.html"><img src="images/priceicon-a.svg" alt="商品情報を作る"
               width="72px" class="icon"> <img src="images/done.svg" alt="商品情報を作る" width="24px" class="doneicon">
-            販売価格を考える</a> </li>
+            参考価格を調べる</a> </li>
         <li class="menucontent">
           <a href="list.html">
 
@@ -41,12 +41,23 @@
     <div class="content">
       <div class="container">
         <div class="titlecontainer">
-          販売価格を考える
+          参考価格を調べる
+        </div>
+        <div class="product-price-container">
+          <div class="product-price-left">
+            <img id="product-image" src="" alt="商品画像" class="hidden">
+          </div>
+          <div class="product-price-right">
+            <span><img src="data:image/png;base64,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" alt=""></span>
+          <h1 id="product-title" class="hidden">商品名</h1>
+          <p id="product-price" class="hidden">販売価格</p>
+        </div>
         </div>
 
-        <h1 id="product-title">商品名</h1>
-        <img id="product-image" src="" alt="商品画像">
-        <p id="product-price">販売価格: </p>
+        <button type="button" id="nextButton" class="mt-2">次へ進む →</button>
+
+
+        
         <script>
           $(document).ready(function () {
             var productName = localStorage.getItem("productName");
@@ -54,19 +65,19 @@
 
             var queryUrl = `/get-price?query=${productName}`;
             console.log('Query URL:', queryUrl);  // この行で生成されたURLをコンソールに出力
-
             $.get(queryUrl)
               .done(function (data) {
                 console.log('Received data:', data);
                 if (data.title && data.price && data.image_url) {
-                  $("#product-title").text(data.title);
-                  $("#product-image").attr("src", data.image_url);
-                  $("#product-price").text(`Price: ${data.price}`);
+                  $("#product-title").text(data.title).removeClass("hidden");
+                  $("#product-image").attr("src", data.image_url).removeClass("hidden");
+                  $("#product-price").text(` ${data.price}`).removeClass("hidden");
                 }
               })
               .fail(function (jqXHR, textStatus, errorThrown) {
                 console.log('Request failed:', textStatus, errorThrown, jqXHR.responseText);
               });
+
           });
 
         </script>

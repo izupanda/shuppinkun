@@ -23,6 +23,11 @@ a{
 }
 
 
+.hidden {
+  display: none;
+}
+
+
 a:hover{
   text-decoration: none;
   color: inherit;
@@ -100,8 +105,9 @@ form {
 .photo-upload-container {
   display: flex;
   justify-content: center;
+  text-align: center;
+  align-items: center;
 }
-
 
 .highlight {
   border-color: blue;
@@ -365,6 +371,7 @@ border: none;
 #upload-text{
   background-color: inherit;
   text-align: center;
+  width: 100%;
 }
 
 .form-group{
@@ -377,6 +384,57 @@ border: none;
   padding: 16px 24px;
 }
 
+.product-price-container{
+  background-color: white;
+  border-radius: 12px;
+  display: block;
+  border: 1px solid lightgray;
+  padding: 40px;
+  display: flex;
+}
+
+
+.product-price-left {
+  height: 140px; 
+  background-color: white;
+  align-items: center; 
+  margin-right: 40px;
+  justify-content: center;
+  display: flex; /* 追加 */
+}
+
+.product-price-left img {
+  width: 200px;
+  margin: auto; /* 追加 */
+}
+
+.product-price-right{
+  background-color: white;
+  justify-content: left;
+  text-align: left;
+  align-items: center;
+}
+
+.product-price-right img{
+  width: 100px;
+  text-align: left;
+}
+
+
+#product-title{
+  background-color: white;
+  font-size: 14px;
+  line-height: 20px;
+  text-align: left;
+  padding-left: 10px;
+  margin-top: 12px;
+}
+#product-price{
+  font-size: 34px;
+  text-align: left;
+  background-color: white;
+  padding-left: 20px;
+}
 
 #productDescription {
   height: 60vh;  /* 縦長にする */
@@ -413,4 +471,11 @@ border: none;
 .ml-auto{
   border: 0;
   color: #C6C6C6;
+}
+
+
+@media (min-width: 1200px){
+  .container{
+    max-width: 100%;
+  }
 }

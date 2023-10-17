@@ -1,6 +1,6 @@
 module myproject
 
-go 1.21.1
+go 1.21
 
 require (
 	github.com/cenkalti/backoff/v4 v4.1.3 // indirect

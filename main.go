@@ -214,5 +214,8 @@ func main() {
 	http.HandleFunc("/get-price", handleGetPrice)
 
 	log.Println("Server is starting at :8080")
-	http.ListenAndServe("0.0.0.0:8080", nil)
+	err := http.ListenAndServe("0.0.0.0:8080", nil)
+	if err != nil {
+		log.Fatalf("Failed to start server: %v", err)
+	}
 }

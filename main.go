@@ -14,7 +14,6 @@ import (
 	"os/exec"
 )
 
-
 type Message struct {
 	Role    string `json:"role"`
 	Content string `json:"content"`
@@ -176,28 +175,27 @@ func handleGetPrice(w http.ResponseWriter, r *http.Request) {
 func handleWebhook(w http.ResponseWriter, r *http.Request) {
 	payload, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-			http.Error(w, "Error reading request body", http.StatusInternalServerError)
-			return
+		http.Error(w, "Error reading request body", http.StatusInternalServerError)
+		return
 	}
 
 	// GitHubのシークレットトークンを使用してリクエストの真正性を検証
 	signature := r.Header.Get("X-Hub-Signature")
 	if !validateSignature(signature, payload, "s3cr3tT0k3nF0rW3bh00k12345") {
-			http.Error(w, "Invalid signature", http.StatusUnauthorized)
-			return
+		http.Error(w, "Invalid signature", http.StatusUnauthorized)
+		return
 	}
 
 	// デプロイスクリプトを実行
-	cmd := exec.Command("/Users/izumi_handa/Documents/01_会社\:事 業/03_事業/03_ツール開発/91_出品くん/01_shupinkun/deploy.sh")
+	cmd := exec.Command("/Users/izumi_handa/Documents/01_会社:事 業/03_事業/03_ツール開発/91_出品くん/01_shupinkun/deploy.sh")
 	err = cmd.Run()
 	if err != nil {
-			http.Error(w, "Deployment failed", http.StatusInternalServerError)
-			return
+		http.Error(w, "Deployment failed", http.StatusInternalServerError)
+		return
 	}
 
 	w.WriteHeader(http.StatusOK)
 }
-
 
 func validateSignature(signature string, payload []byte, secret string) bool {
 	mac := hmac.New(sha1.New, []byte(secret))
@@ -206,7 +204,6 @@ func validateSignature(signature string, payload []byte, secret string) bool {
 	expectedSignature := "sha1=" + hex.EncodeToString(expectedMAC)
 	return hmac.Equal([]byte(signature), []byte(expectedSignature))
 }
-
 
 func main() {
 	fs := http.FileServer(http.Dir("./static"))

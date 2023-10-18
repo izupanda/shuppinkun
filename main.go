@@ -217,5 +217,9 @@ func main() {
 	http.HandleFunc("/get-price", handleGetPrice)
 
 	log.Println("Server is starting at :8080")
+<<<<<<< Updated upstream
 	http.ListenAndServe("0.0.0.0:8080", nil)
 }
+=======
+	http.ListenAndServe(":8080", n
+>>>>>>> Stashed changes
